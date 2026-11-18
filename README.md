@@ -121,10 +121,3 @@ flowchart LR
 
 ## 13. Limitações
 Os valores são projeções condicionadas às premissas acima, não resultados garantidos. A redução de 30% é de um estudo de água em outra horta e foi aplicada ao tempo de bomba. Preços de controlador, bomba DC e bateria não têm orçamento. A irradiação vem de uma cidade do litoral. Não foram dimensionados a hidráulica, a sombra no local nem a degradação do painel, e a pegada de fabricação não foi contabilizada. Os dados do dashboard são simulados.
-
-## 14. Roteiro do vídeo (≤ 3 min)
-1. 0:00 a 0:30: horta escolhida e problema (timer fixo, desperdício).
-2. 0:30 a 1:15: consumo e comparação de A e B (tabela).
-3. 1:15 a 1:45: diagrama de blocos.
-4. 1:45 a 2:30: demonstração do dashboard mexendo nos deslizadores.
-5. 2:30 a 3:00: benefícios e limitações.
