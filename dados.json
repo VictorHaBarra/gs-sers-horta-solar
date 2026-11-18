@@ -1,0 +1,39 @@
+{
+  "cenarios": {
+    "Base (bomba 370 W + timer)": {
+      "consumo_kwh_mes": 22.2,
+      "rede_kwh_mes": 22.2,
+      "economia_kwh_mes": 0.0,
+      "economia_pct": 0.0,
+      "economia_rs_mes": 0.0,
+      "co2_evitado_kg_ano": 0.0,
+      "renovavel_pct": 0.0,
+      "custo_implantacao_rs": 0,
+      "payback_meses": null
+    },
+    "A (rede + sensores)": {
+      "consumo_kwh_mes": 17.7,
+      "rede_kwh_mes": 17.7,
+      "economia_kwh_mes": 4.5,
+      "economia_pct": 20.3,
+      "economia_rs_mes": 4.27,
+      "co2_evitado_kg_ano": 2.08,
+      "renovavel_pct": 0.0,
+      "custo_implantacao_rs": 350,
+      "payback_meses": 81.9
+    },
+    "B (solar fotovoltaica + sensores)": {
+      "consumo_kwh_mes": 8.46,
+      "rede_kwh_mes": 0,
+      "economia_kwh_mes": 22.2,
+      "economia_pct": 100.0,
+      "economia_rs_mes": 21.09,
+      "co2_evitado_kg_ano": 10.26,
+      "renovavel_pct": 100.0,
+      "custo_implantacao_rs": 1850,
+      "payback_meses": 87.7
+    }
+  },
+  "geracao_kwh_mes": 18.9,
+  "geracao_pior_mes_kwh": 13.05
+}

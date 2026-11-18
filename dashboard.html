@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neighborhood Action Dashboard | SERS | Horta Solar</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:900px;margin:20px auto;padding:0 12px;color:#1b2a1b}
+h1{font-size:1.3rem}.row{display:flex;gap:16px;flex-wrap:wrap}
+label{display:block;font-size:.85rem;margin:6px 0}
+.kpi{flex:1;min-width:150px;background:#eef6ee;border-radius:8px;padding:10px}
+.kpi b{font-size:1.4rem;display:block}
+table{border-collapse:collapse;width:100%;font-size:.85rem;margin:12px 0}
+td,th{border-bottom:1px solid #ccd;padding:5px;text-align:right}td:first-child,th:first-child{text-align:left}
+.wrap{overflow-x:auto}small{color:#556}
+</style></head><body>
+<h1>Horta comunitária solar: indicadores energéticos (projeção, 30 dias)</h1>
+<div class="row">
+<div><label>Bomba no cenário base (h/dia): <span id="v1"></span><br><input id="h0" type="range" min="1" max="4" step="0.1" value="2"></label></div>
+<div><label>Tarifa (R$/kWh): <span id="v2"></span><br><input id="tar" type="range" min="0.5" max="1.5" step="0.01" value="0.95"></label></div>
+<div><label>Fator de emissão (kg CO₂e/kWh): <span id="v3"></span><br><input id="fat" type="range" min="0.02" max="0.2" step="0.0005" value="0.0385"></label></div>
+</div>
+<h3>Alternativa B (solar + sensores) vs. cenário base</h3>
+<div class="row" id="kpis"></div>
+<h3>Consumo mensal por fonte (kWh/mês)</h3>
+<svg id="bars" width="100%" viewBox="0 0 640 150"></svg>
+<div class="wrap"><table id="tb"></table></div>
+<small>Projeções condicionadas às premissas do README; não são resultados garantidos.</small>
+<script>
+const P={"Base":{p:370,solar:0,custo:0,sens:0},"A: rede + sensores":{p:370,solar:0,custo:350,sens:1},"B: solar + sensores":{p:150,solar:1,custo:1850,sens:1}};
+const $=i=>document.getElementById(i);
+function calc(h0,tar,fat){const ctrl=3*24*30/1000,bh=370*h0*30/1000,o={};
+for(const k in P){const c=P[k],h=c.sens?h0*0.7:h0,tot=c.p*h*30/1000+(c.sens?ctrl:0);
+const rede=c.solar?0:tot,sol=c.solar?tot:0,eco=bh-rede;
+o[k]={tot,rede,sol,eco,pct:eco/bh*100,rs:eco*tar,co2:eco*12*fat,ren:tot?sol/tot*100:0,custo:c.custo,pay:eco>0?c.custo/(eco*tar):null}}return o}
+function f(x,d=1){return x.toFixed(d).replace(".",",")}
+function render(){const h0=+$("h0").value,tar=+$("tar").value,fat=+$("fat").value;
+$("v1").textContent=f(h0);$("v2").textContent=f(tar,2);$("v3").textContent=f(fat,4);
+const o=calc(h0,tar,fat),b=o["B: solar + sensores"];
+$("kpis").innerHTML=[["Economia de energia da rede",f(b.eco)+" kWh/mês ("+f(b.pct,0)+"%)"],["Redução de custo","R$ "+f(b.rs,2)+"/mês"],["Energia renovável",f(b.ren,0)+"%"],["Emissões evitadas",f(b.co2)+" kg CO₂e/ano"]].map(x=>`<div class="kpi">${x[0]}<b>${x[1]}</b></div>`).join("");
+const mx=Math.max(...Object.values(o).map(v=>v.tot));let s="",y=10;
+for(const k in o){const v=o[k],w1=v.rede/mx*400,w2=v.sol/mx*400;
+s+=`<text x="0" y="${y+16}" font-size="12" fill="currentColor">${k}</text><rect x="170" y="${y}" width="${w1}" height="24" fill="#c0504d"/><rect x="${170+w1}" y="${y}" width="${w2}" height="24" fill="#4a9b4a"/><text x="${175+w1+w2}" y="${y+16}" font-size="12" fill="currentColor">${f(v.tot)}</text>`;y+=40}
+$("bars").innerHTML=s+`<text x="170" y="145" font-size="11" fill="currentColor">vermelho = rede elétrica · verde = solar</text>`;
+let t="<tr><th>Alternativa</th><th>kWh/mês</th><th>Economia</th><th>R$/mês</th><th>CO₂e kg/ano</th><th>Renovável</th><th>Custo (R$)</th><th>Retorno (meses)</th></tr>";
+for(const k in o){const v=o[k];t+=`<tr><td>${k}</td><td>${f(v.tot)}</td><td>${f(v.pct,0)}%</td><td>${f(v.rs,2)}</td><td>${f(v.co2)}</td><td>${f(v.ren,0)}%</td><td>${v.custo}</td><td>${v.pay?f(v.pay,0):"—"}</td></tr>`}
+$("tb").innerHTML=t}
+["h0","tar","fat"].forEach(i=>$(i).addEventListener("input",render));render();
+</script></body></html>
